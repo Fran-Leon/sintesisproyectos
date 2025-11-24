@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>No se pudo acceder al sitio</title>
+  <style>
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#f7f7f7 0%, #ffffff 100%);
+      color:#202124;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;align-items:center;justify-content:center;padding:32px
+    }
+
+    .card{
+      max-width:920px;width:100%;display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:center;
+      background:transparent;
+    }
+
+    .left{
+      padding:18px 12px;
+    }
+
+    h1{
+      font-size:28px;font-weight:600;margin-bottom:10px;color:#202124;
+    }
+
+    .site{
+      color:#5f6368;font-size:13px;margin-bottom:18px;
+    }
+
+    .desc{
+      color:#5f6368;font-size:15px;line-height:1.5;margin-bottom:18px;
+    }
+
+    .controls{display:flex;gap:10px;margin-bottom:22px}
+    .btn{
+      border:1px solid rgba(32,33,36,.12);padding:10px 14px;border-radius:6px;background:#fff;cursor:pointer;font-weight:600;box-shadow:0 1px 1px rgba(60,64,67,.08);
+    }
+    .btn:active{transform:translateY(1px)}
+
+    .muted{
+      font-size:13px;color:#70757a
+    }
+
+    /* Right column: dino */
+    .right{display:flex;align-items:center;justify-content:center}
+    .dino-wrap{
+      width:320px;height:200px;background:linear-gradient(180deg,#ffffff,#f3f4f6);border-radius:10px;border:1px solid rgba(32,33,36,.06);display:flex;align-items:center;justify-content:center;flex-direction:column;padding:18px;box-shadow:0 6px 18px rgba(60,64,67,.06)
+    }
+
+    /* Simple T-Rex SVG styles */
+    .dino{width:180px;height:auto;display:block}
+
+    /* small screen adjustments */
+    @media (max-width:880px){
+      .card{grid-template-columns:1fr;}
+      .right{order:-1;margin-bottom:8px}
+    }
+
+    /* subtle glitch line like chrome */
+    .gloss{height:1px;background:linear-gradient(90deg,transparent,#e8eaed,transparent);margin:12px 0 20px}
+
+    /* details area */
+    .details{background:rgba(250,250,250,0.8);border-radius:8px;padding:12px;border:1px solid rgba(32,33,36,.04);font-size:13px;color:#5f6368}
+
+    /* small animation to give life */
+    @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-3px)}100%{transform:translateY(0)}}
+    .dino-wrap{animation:floaty 3.5s ease-in-out infinite}
+  </style>
+</head>
+<body>
+  <div class="card" role="main">
+    <div class="left">
+      <!-- small image placed above the title; sized so it starts at the same x-position as the "N" -->
+      <div style="margin-bottom:8px;">
+        <img src="C:\Users\argo\Desktop\F&D Technologies\img\error.png" alt="icono de error" style="width:40px;height:auto;display:block;">
+      </div>
+      <h1>No se pudo acceder al sitio</h1>
+      <div class="site" id="site">Te has quedao sin reclamacion pringao</div>
+
+      <div class="desc">Prueba a:</div>
+      <ul style="margin:8px 0 18px 20px;color:#5f6368">
+        <li>Nada</li>
+        <li>No reclamar la proxima</li>
+      </ul>
+
+      <div class="controls">
+        <button class="btn" id="reloadBtn" title="Reload">Recargar Pagina</button>
+        <button class="btn" id="advBtn" title="More details">Mostrar detalles</button>
+      </div>
+
+      <div class="gloss" aria-hidden="true"></div>
+
+      <div class="muted">TE_JODES_Y_BAILAS</div>
+
+      <div style="height:12px"></div>
+
+      <div class="details" id="details" style="display:none">
+        <strong>Información técnica:</strong>
+        <p style="margin-top:8px">Desafortunadamente <span id="detailsSite">www.queja.com</span> no funciona porque nos da palo tener que gestionar la queja, probablemente injustificada, que nos ibas a enviar.</p>
+      </div>
+    </div>
+
+    <!-- right column removed per user request (dino image) -->
+  </div>
+
+  <script>
+    // Config: change this to mock different hosts or error messages
+    const hostname = location.search.replace('?','') || 'www.queja.com';
+
+    const siteEl = document.getElementById('site');
+    const detailsSiteEl = document.getElementById('detailsSite');
+    siteEl.textContent = hostname + ' tardó demasiado en responder.';
+    detailsSiteEl.textContent = hostname;
+
+    // Buttons
+    document.getElementById('reloadBtn').addEventListener('click', ()=>{
+      // Try to mimic reload behavior: attempt to fetch the host (will likely fail due to CORS)
+      // We just show a flicker then a failed message to mimic UX.
+      const old = siteEl.textContent;
+      siteEl.textContent = 'Checking...';
+      setTimeout(()=>{ siteEl.textContent = old }, 1000);
+    });
+
+    document.getElementById('advBtn').addEventListener('click', ()=>{
+      const d = document.getElementById('details');
+      d.style.display = d.style.display === 'none' ? 'block' : 'none';
+      d.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+
+    // Press R to 'reload' for convenience
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'r' || e.key === 'R') document.getElementById('reloadBtn').click();
+    });
+
+    // If user wants the real "offline dino" T-rex runner, that's a fun extra —
+    // but here we keep it simple and self-contained. You can replace the SVG
+    // with the original runner code if you want the classic playable game.
+  </script>
+</body>
+</html>
